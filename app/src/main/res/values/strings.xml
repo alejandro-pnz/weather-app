@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="choose_city">Enter the name of the city:</string>
+    <string name="get_weather">Get forecast</string>
+    <string name="menu_change_city_item">Change city</string>
+    <string name="check_network">Check your network connection</string>
+    <string name="menu_update_city_item">Update</string>
+</resources>
