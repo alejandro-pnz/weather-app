@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/default_text_single_line_height"
     android:layout_marginBottom="@dimen/default_item_margin"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:orientation="horizontal">
 
     <TextView
@@ -10,7 +12,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:gravity="center"
         android:textSize="@dimen/item_text_size"
         android:layout_weight="1"/>
 
@@ -18,8 +19,8 @@
         android:id="@+id/temp_city_weather_text"
         android:layout_width="0dp"
         android:textSize="@dimen/item_text_size"
+        android:gravity="right"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:gravity="center"
         android:layout_weight="1"/>
 </LinearLayout>

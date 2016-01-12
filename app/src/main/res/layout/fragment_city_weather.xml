@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackground"
+                android:orientation="vertical"
+                tools:context=".ui.CityWeatherFragment">
 
-    <TextView
-        android:id="@+id/city_weather_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:visibility="gone"
-        android:textSize="@dimen/text_title_size" />
+	<TextView
+			android:id="@+id/city_weather_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="@dimen/activity_vertical_margin"
+			android:layout_centerHorizontal="true"
+			android:textSize="@dimen/text_title_size"/>
 
-    <ProgressBar
-        android:id="@+id/city_weather_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+	<TextView
+			android:id="@+id/no_city_info_available"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/no_info_available"
+			android:layout_below="@+id/city_weather_title"
+			android:layout_centerHorizontal="true"
+			android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/weather_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-</LinearLayout>
+	<ProgressBar
+			android:id="@+id/city_weather_progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_centerHorizontal="true"/>
+
+	<android.support.v7.widget.RecyclerView
+			android:id="@+id/weather_recycler"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/city_weather_title"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:visibility="gone"/>
+</RelativeLayout>

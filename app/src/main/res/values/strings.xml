@@ -5,4 +5,6 @@
     <string name="menu_change_city_item">Change city</string>
     <string name="check_network">Check your network connection</string>
     <string name="menu_update_city_item">Update</string>
+	<string name="no_info_available">No weather information available.</string>
+    <string name="no_info_available_no_internet">No weather information available. Check your network connection.</string>
 </resources>

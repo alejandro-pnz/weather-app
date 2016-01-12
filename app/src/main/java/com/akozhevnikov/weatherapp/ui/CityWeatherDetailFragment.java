@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -28,114 +27,135 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class CityWeatherDetailFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
-    private final int DETAIL_LOADER_WEATHER_ID = 2;
+		implements LoaderManager.LoaderCallbacks<Cursor> {
+	private final int DETAIL_LOADER_WEATHER_ID = 2;
+	private static final Calendar CALENDAR = Calendar.getInstance();
 
-    private CityWeatherDetailAdapter adapter;
-    private RecyclerView weatherDetailRecycler;
-    private String city;
-    private int dayOfTheYear;
-    private ProgressBar progressBar;
-    private TextView cityTextView;
-    private TextView temperatureTextView;
-    private List<WeatherHourTimestamp> weatherByHours;
+	private CityWeatherDetailAdapter adapter;
+	private String city;
+	private int dayOfTheYear;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
-    }
+	@Bind(R.id.weather_detail_recycler)
+	RecyclerView weatherDetailRecycler;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_city_weather_detail, container, false);
-        progressBar = (ProgressBar) view.findViewById(R.id.detail_progress_bar);
+	@Bind(R.id.detail_progress_bar)
+	ProgressBar progressBar;
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            dayOfTheYear = bundle.getInt(NetworkUtils.DAY_KEY);
-        }
+	@Bind(R.id.detail_city_text)
+	TextView cityTextView;
 
-        city = Settings.getDefaultCity(getActivity());
-        cityTextView = (TextView) view.findViewById(R.id.detail_city_text);
-        cityTextView.setText(city);
+	@Bind(R.id.detail_city_temperature)
+	TextView temperatureTextView;
 
-        temperatureTextView = (TextView) view.findViewById(R.id.detail_city_temperature);
-        temperatureTextView.setText(DateFormatter.getDayOfTheYear(dayOfTheYear));
+	@Bind(R.id.no_detail_info_available)
+	TextView noInfoAvailableTextView;
 
-        weatherByHours = new ArrayList<>();
-        adapter = new CityWeatherDetailAdapter(getContext(), weatherByHours);
+	private List<WeatherHourTimestamp> weatherByHours;
+	private LoaderManager loaderManager;
 
-        weatherDetailRecycler = (RecyclerView) view.findViewById(R.id.weather_detail_recycler);
-        weatherDetailRecycler.setAdapter(adapter);
-        weatherDetailRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        getActivity()
-                .getSupportLoaderManager()
-                .initLoader(DETAIL_LOADER_WEATHER_ID, Bundle.EMPTY, this);
-        return view;
-    }
+		setHasOptionsMenu(false);
 
-    @Override
-    public void onStop() {
-        super.onStop();
+		Bundle bundle = this.getArguments();
+		if (bundle != null) {
+			dayOfTheYear = bundle.getInt(NetworkUtils.DAY_KEY);
+		}
 
-        getActivity()
-                .getSupportLoaderManager()
-                .destroyLoader(DETAIL_LOADER_WEATHER_ID);
-    }
+		city = Settings.getDefaultCity(getContext());
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-    }
+		weatherByHours = new ArrayList<>();
+		loaderManager = getActivity().getSupportLoaderManager();
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case DETAIL_LOADER_WEATHER_ID:
-                return new WeatherLoader(getContext(), city);
-            default:
-                return null;
-        }
-    }
+		loaderManager.initLoader(DETAIL_LOADER_WEATHER_ID, Bundle.EMPTY, this);
+	}
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        int id = loader.getId();
-        if (id == DETAIL_LOADER_WEATHER_ID) {
-            progressBar.setVisibility(View.GONE);
-            weatherDetailRecycler.setVisibility(View.VISIBLE);
-            temperatureTextView.setVisibility(View.VISIBLE);
-            cityTextView.setVisibility(View.VISIBLE);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_city_weather_detail, container, false);
+		ButterKnife.bind(this, view);
 
-            if (data != null && data.moveToFirst()) {
-                if (!data.moveToFirst()) {
-                    return;
-                }
-                try {
-                    do {
-                        WeatherHourTimestamp timestamp = WeatherTable.fromCursor(data);
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(timestamp.getTime() * 1000L);
-                        int timestampDay = calendar.get(Calendar.DAY_OF_YEAR);
-                        if (timestampDay == dayOfTheYear)
-                            weatherByHours.add(timestamp);
-                    } while (data.moveToNext());
-                    data.close();
-                } finally {
-                    data.close();
-                }
-                adapter.notifyDataSetChanged();
-            }
-        }
-        getLoaderManager().destroyLoader(id);
-    }
+		cityTextView.setText(city);
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
+		temperatureTextView.setText(DateFormatter.getDayOfTheYear(dayOfTheYear));
+
+		adapter = new CityWeatherDetailAdapter(getContext(), weatherByHours);
+
+		weatherDetailRecycler.setAdapter(adapter);
+		weatherDetailRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
+		return view;
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		loaderManager.destroyLoader(DETAIL_LOADER_WEATHER_ID);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.clear();
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		switch (id) {
+			case DETAIL_LOADER_WEATHER_ID:
+				return new WeatherLoader(getContext(), city);
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		int id = loader.getId();
+		if (id == DETAIL_LOADER_WEATHER_ID) {
+			progressBar.setVisibility(View.GONE);
+
+			if (data != null && data.moveToFirst()) {
+				weatherDetailRecycler.setVisibility(View.VISIBLE);
+				temperatureTextView.setVisibility(View.VISIBLE);
+				noInfoAvailableTextView.setVisibility(View.GONE);
+
+				if (!data.moveToFirst()) {
+					return;
+				}
+				try {
+					do {
+						WeatherHourTimestamp timestamp = WeatherTable.fromCursor(data);
+						CALENDAR.setTimeInMillis(timestamp.getTime() * 1000L);
+						int timestampDay = CALENDAR.get(Calendar.DAY_OF_YEAR);
+						if (timestampDay == dayOfTheYear)
+							weatherByHours.add(timestamp);
+					} while (data.moveToNext());
+					data.close();
+				} finally {
+					data.close();
+				}
+				adapter.notifyDataSetChanged();
+			} else if (!NetworkUtils.isNetworkAvailable(getContext())) {
+				noInfoAvailableTextView.setText(getResources().getString(R.string.no_info_available_no_internet));
+				noInfoAvailableTextView.setVisibility(View.VISIBLE);
+			} else {
+				noInfoAvailableTextView.setVisibility(View.VISIBLE);
+			}
+		}
+		loaderManager.destroyLoader(id);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		loaderManager.destroyLoader(loader.getId());
+	}
 }
