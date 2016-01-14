@@ -136,8 +136,9 @@ public class CityWeatherDetailFragment extends Fragment
 						WeatherHourTimestamp timestamp = WeatherTable.fromCursor(data);
 						CALENDAR.setTimeInMillis(timestamp.getTime() * 1000L);
 						int timestampDay = CALENDAR.get(Calendar.DAY_OF_YEAR);
-						if (timestampDay == dayOfTheYear)
+						if (timestampDay == dayOfTheYear) {
 							weatherByHours.add(timestamp);
+						}
 					} while (data.moveToNext());
 					data.close();
 				} finally {
@@ -145,7 +146,7 @@ public class CityWeatherDetailFragment extends Fragment
 				}
 				adapter.notifyDataSetChanged();
 			} else if (!NetworkUtils.isNetworkAvailable(getContext())) {
-				noInfoAvailableTextView.setText(getResources().getString(R.string.no_info_available_no_internet));
+				noInfoAvailableTextView.setText(getResources().getString(R.string.no_info_available_no_network));
 				noInfoAvailableTextView.setVisibility(View.VISIBLE);
 			} else {
 				noInfoAvailableTextView.setVisibility(View.VISIBLE);

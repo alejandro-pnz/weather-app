@@ -11,9 +11,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.akozhevnikov.weatherapp.R;
-import com.akozhevnikov.weatherapp.network.NetworkUtils;
 import com.akozhevnikov.weatherapp.network.WeatherDayTimestamp;
 import com.akozhevnikov.weatherapp.utils.DateFormatter;
+
+import static com.akozhevnikov.weatherapp.network.NetworkUtils.DAY_KEY;
 
 public class CityWeatherHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	private Context context;
@@ -44,7 +45,7 @@ public class CityWeatherHolder extends RecyclerView.ViewHolder implements View.O
 		FragmentTransaction transaction = manager.beginTransaction();
 		Fragment fragment = new CityWeatherDetailFragment();
 		Bundle bundle = new Bundle();
-		bundle.putInt(NetworkUtils.DAY_KEY, dayOfTheYear);
+		bundle.putInt(DAY_KEY, dayOfTheYear);
 		fragment.setArguments(bundle);
 		transaction.add(R.id.content_frame, fragment);
 		transaction.addToBackStack(null);

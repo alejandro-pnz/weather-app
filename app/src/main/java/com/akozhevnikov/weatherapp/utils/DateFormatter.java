@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class DateFormatter {
+public final class DateFormatter {
     private final static String CELSIUS_DEGREE = "℃";
     private final static String DATE_FORMAT = "EEE, d MMM";
     private final static String GMT_TIME_ZONE = "GMT";

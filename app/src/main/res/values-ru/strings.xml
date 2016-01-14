@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="choose_city">Введите название города:</string>
+	<string name="get_weather">Получить прогноз</string>
+	<string name="menu_change_city_item">Изменить город</string>
+	<string name="check_network">Проверьте подключение к интернету</string>
+	<string name="menu_update_city_item">Обновить</string>
 	<string name="no_info_available">Информация о погоде недоступна</string>
-	<string name="no_info_available_no_internet">Информация о погоде недоступна. Проверьте подключение к интернету.</string>
+	<string name="no_info_available_no_network">Информация о погоде недоступна. Проверьте подключение к интернету.</string>
+	<string name="no_info_available_server_down">Информация о погоде недоступна. Сервер не отвечает.</string>
+	<string name="no_info_available_server_error">
+		Информация о погоде недоступна. Сервер не возвращает корректные данные.</string>
+	<string name="no_info_available_invalid_location">Информация о погоде недоступна. Некорректно имя города.</string>
+	<string name="action_settings">Настройки</string>
 </resources>

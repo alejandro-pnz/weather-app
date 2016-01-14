@@ -1,6 +1,7 @@
 package com.akozhevnikov.weatherapp.ui;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import com.akozhevnikov.weatherapp.R;
 import com.akozhevnikov.weatherapp.network.WeatherDayTimestamp;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 public class CityWeatherAdapter extends RecyclerView.Adapter<CityWeatherHolder> {

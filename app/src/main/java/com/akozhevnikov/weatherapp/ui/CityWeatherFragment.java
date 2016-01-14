@@ -1,7 +1,10 @@
 package com.akozhevnikov.weatherapp.ui;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,7 +37,8 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CityWeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CityWeatherFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+		SharedPreferences.OnSharedPreferenceChangeListener {
 	private static final int LOADER_WEATHER_ID = 1;
 	private static final long MILLIS_IN_SECOND = 1000L;
 
@@ -112,7 +116,25 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 			noInfoAvailableTextView.setVisibility(View.GONE);
 			loaderManager.restartLoader(LOADER_WEATHER_ID, Bundle.EMPTY, this);
 		}
+		if(item.getItemId() == R.id.menu_city_weather_settings){
+			Intent settingsIntent = new Intent(getContext(), SettingsActivity.class);
+			startActivity(settingsIntent);
+		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onResume() {
+		PreferenceManager.getDefaultSharedPreferences(getContext())
+				.registerOnSharedPreferenceChangeListener(this);
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		PreferenceManager.getDefaultSharedPreferences(getContext())
+				.unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();
 	}
 
 	@Override
@@ -136,6 +158,7 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		int id = loader.getId();
 		if (id == LOADER_WEATHER_ID) {
+			cityTextView.setText(Settings.getDefaultCity(getContext()));
 			progressBar.setVisibility(View.GONE);
 			weatherRecycler.setVisibility(View.VISIBLE);
 
@@ -145,7 +168,7 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 				if (!data.moveToFirst()) {
 					return;
 				}
-				Settings.setDefaultCity(city, getActivity());
+				Settings.setDefaultCity(getContext(), city);
 				try {
 					do {
 						weatherByHours.add(WeatherTable.fromCursor(data));
@@ -155,9 +178,6 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 				}
 				getAverageDayData(weatherByHours);
 				adapter.notifyDataSetChanged();
-			} else if (!NetworkUtils.isNetworkAvailable(getContext())) {
-				noInfoAvailableTextView.setText(getResources().getString(R.string.no_info_available_no_internet));
-				noInfoAvailableTextView.setVisibility(View.VISIBLE);
 			} else {
 				noInfoAvailableTextView.setVisibility(View.VISIBLE);
 			}
@@ -196,6 +216,36 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 			dayTimestamp.setAverageTemperature(averageTemperature);
 			weatherByDays.add(dayTimestamp);
 			currentDay = day;
+		}
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if (key.equals(getString(R.string.pref_server_status))) {
+			updateEmptyView();
+		}
+	}
+
+	private void updateEmptyView() {
+		if (adapter.getItemCount() == 0) {
+			int message = R.string.no_info_available;
+			@WeatherLoader.LocationStatus int location = Settings.getServerStatus(getContext());
+			switch (location) {
+				case WeatherLoader.SERVER_STATUS_SERVER_DOWN:
+					message = R.string.no_info_available_server_down;
+					break;
+				case WeatherLoader.SERVER_STATUS_SERVER_INVALID:
+					message = R.string.no_info_available_server_error;
+					break;
+				case WeatherLoader.SERVER_STATUS_INVALID:
+					message = R.string.no_info_available_invalid_location;
+					break;
+				default:
+					if (!NetworkUtils.isNetworkAvailable(getContext())) {
+						message = R.string.no_info_available_no_network;
+					}
+			}
+			noInfoAvailableTextView.setText(message);
 		}
 	}
 }

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">WeatherApp</string>
-    <string name="choose_city">Введите название города:</string>
-    <string name="get_weather">Получить прогноз</string>
-    <string name="menu_change_city_item">Изменить город</string>
-    <string name="check_network">Проверьте подключение к интернету</string>
-    <string name="menu_update_city_item">Обновить</string>
-</resources>
