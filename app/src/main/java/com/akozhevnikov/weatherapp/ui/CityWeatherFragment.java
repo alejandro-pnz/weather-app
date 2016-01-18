@@ -70,8 +70,11 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 		}
 
 		loaderManager = getActivity().getSupportLoaderManager();
-
 		loaderManager.initLoader(LOADER_WEATHER_ID, Bundle.EMPTY, this);
+
+
+		PreferenceManager.getDefaultSharedPreferences(getContext())
+				.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
@@ -106,35 +109,11 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 			transaction.add(R.id.content_frame, new ChooseCityFragment());
 			transaction.addToBackStack(null);
 			transaction.commit();
-		}
-		if (item.getItemId() == R.id.menu_city_weather_update) {
-			//TODO Update
-			weatherByDays.clear();
-			adapter.notifyDataSetChanged();
-			progressBar.setVisibility(View.VISIBLE);
-			weatherRecycler.setVisibility(View.GONE);
-			noInfoAvailableTextView.setVisibility(View.GONE);
-			loaderManager.restartLoader(LOADER_WEATHER_ID, Bundle.EMPTY, this);
-		}
-		if(item.getItemId() == R.id.menu_city_weather_settings){
+		} else if (item.getItemId() == R.id.menu_city_weather_settings) {
 			Intent settingsIntent = new Intent(getContext(), SettingsActivity.class);
 			startActivity(settingsIntent);
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onResume() {
-		PreferenceManager.getDefaultSharedPreferences(getContext())
-				.registerOnSharedPreferenceChangeListener(this);
-		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		PreferenceManager.getDefaultSharedPreferences(getContext())
-				.unregisterOnSharedPreferenceChangeListener(this);
-		super.onPause();
 	}
 
 	@Override
@@ -147,8 +126,9 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		switch (id) {
-			case LOADER_WEATHER_ID:
+			case LOADER_WEATHER_ID: {
 				return new WeatherLoader(getContext(), city);
+			}
 			default:
 				return null;
 		}
@@ -163,12 +143,12 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 			weatherRecycler.setVisibility(View.VISIBLE);
 
 			List<WeatherHourTimestamp> weatherByHours = new ArrayList<>();
+			Settings.setDefaultCity(getContext(), city);
 
 			if (data != null && data.moveToFirst()) {
 				if (!data.moveToFirst()) {
 					return;
 				}
-				Settings.setDefaultCity(getContext(), city);
 				try {
 					do {
 						weatherByHours.add(WeatherTable.fromCursor(data));
@@ -177,9 +157,10 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 					data.close();
 				}
 				getAverageDayData(weatherByHours);
+				noInfoAvailableTextView.setVisibility(View.GONE);
 				adapter.notifyDataSetChanged();
 			} else {
-				noInfoAvailableTextView.setVisibility(View.VISIBLE);
+				updateEmptyView();
 			}
 		}
 
@@ -223,6 +204,10 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals(getString(R.string.pref_server_status))) {
 			updateEmptyView();
+		} else if (key.equals(getString(R.string.pref_location))) {
+			city = sharedPreferences.getString(getString(R.string.pref_location), city);
+			loaderManager.destroyLoader(LOADER_WEATHER_ID);
+			loaderManager.initLoader(LOADER_WEATHER_ID, Bundle.EMPTY, this);
 		}
 	}
 
@@ -245,6 +230,7 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 						message = R.string.no_info_available_no_network;
 					}
 			}
+			noInfoAvailableTextView.setVisibility(View.VISIBLE);
 			noInfoAvailableTextView.setText(message);
 		}
 	}

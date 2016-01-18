@@ -12,10 +12,14 @@
     </string>
 	<string name="pref_server_status" translatable="false">locationStatus</string>
 	<string name="pref_location" translatable="false">location</string>
-	<string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
-	<string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="pref_register_status" translatable="false">serverStatus</string>
+    <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+    <string name="pref_location_unknown_description">Validating Location... (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
 	<string name="location_title">Location</string>
     <string name="no_info_available_server_error">
         No weather information available. The server is not returning valid data.</string>
 	<string name="no_info_available_invalid_location">No weather information available. Invalid location.</string>
+    <string name="pref_location_summary">Current weather location</string>
+    <string name="weather_icon" translatable="false">Weather state icon</string>
+    <string name="notif_message">Warning</string>
 </resources>

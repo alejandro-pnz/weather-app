@@ -92,6 +92,7 @@ public class WeatherLoader extends BaseLoader {
 
 						resolver.insert(WeatherProvider.CITY_CONTENT_URI, values);
 					}
+					cityCursor.close();
 
 					for (WeatherHourTimestamp hourWeather : response.body().getWeatherTimestampList()) {
 						Cursor checkWeatherCursor = resolver.query(
@@ -130,6 +131,7 @@ public class WeatherLoader extends BaseLoader {
 									selectionClause,
 									selectionArgs);
 						}
+						checkWeatherCursor.close();
 					}
 					deliverResult(getCursorResult(city));
 					Settings.setServerStatus(getContext(), SERVER_STATUS_OK);

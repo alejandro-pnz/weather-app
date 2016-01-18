@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-		xmlns:android="http://schemas.android.com/apk/res/android">
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:custom="http://schemas.android.com/apk/res-auto">
 	<EditTextPreference
 			android:key="@string/pref_location"
-			android:summary="@string/action_settings"
-			android:title="@string/location_title">
-	</EditTextPreference>
+			android:summary="@string/pref_location_summary"
+			android:title="@string/location_title"/>
+
+	<com.akozhevnikov.weatherapp.ui.LocationEditTextPreference
+			android:key="@string/pref_location"
+			android:summary="@string/pref_location_summary"
+			android:title="@string/location_title"
+			custom:minLength="3"/>
 </PreferenceScreen>

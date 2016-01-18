@@ -29,4 +29,14 @@ public final class Settings {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		preferences.edit().putInt(context.getString(R.string.pref_server_status), locationStatus).apply();
 	}
+
+	public static final boolean getServerRegistrationStatus(Context context) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return preferences.getBoolean(context.getString(R.string.pref_register_status), false);
+	}
+
+	public static void setServerRegistrationStatus(Context context, boolean state) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		preferences.edit().putBoolean(context.getString(R.string.pref_register_status), state).apply();
+	}
 }

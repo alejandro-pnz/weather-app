@@ -1,19 +1,26 @@
 package com.akozhevnikov.weatherapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.akozhevnikov.weatherapp.R;
+import com.akozhevnikov.weatherapp.gcm.RegistrationIntentService;
 import com.akozhevnikov.weatherapp.utils.Settings;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import static com.akozhevnikov.weatherapp.network.NetworkUtils.CITY_KEY;
 
 public class MainActivity extends AppCompatActivity
 		implements FragmentManager.OnBackStackChangedListener {
+	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,17 @@ public class MainActivity extends AppCompatActivity
 			}
 			initTransaction.add(R.id.content_frame, fragment);
 			initTransaction.commit();
+		}
+
+		if(checkPlayServices()){
+			boolean sentToken = Settings.getServerRegistrationStatus(this);
+			if(!sentToken){
+				Intent intent = new Intent(this, RegistrationIntentService.class);
+				startService(intent);
+
+				Log.d("LISTENER", "Start server");
+			}
+			Log.d("LISTENER", "Status is false");
 		}
 	}
 
@@ -69,6 +87,22 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public boolean onSupportNavigateUp() {
 		getSupportFragmentManager().popBackStack();
+		return true;
+	}
+
+	private boolean checkPlayServices() {
+		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (apiAvailability.isUserResolvableError(resultCode)) {
+				apiAvailability.getErrorDialog(this, resultCode,
+						PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				Toast.makeText(this, "This device is not supported.", Toast.LENGTH_SHORT).show();
+				finish();
+			}
+			return false;
+		}
 		return true;
 	}
 }

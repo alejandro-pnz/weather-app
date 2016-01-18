@@ -19,7 +19,7 @@
         android:id="@+id/temp_city_weather_text"
         android:layout_width="0dp"
         android:textSize="@dimen/item_text_size"
-        android:gravity="right"
+        android:gravity="end"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"/>
