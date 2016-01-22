@@ -48,8 +48,8 @@ public class CityWeatherDetailFragment extends Fragment
 	@Bind(R.id.detail_city_text)
 	TextView cityTextView;
 
-	@Bind(R.id.detail_city_temperature)
-	TextView temperatureTextView;
+	@Bind(R.id.detail_city_date)
+	TextView dateTextView;
 
 	@Bind(R.id.no_detail_info_available)
 	TextView noInfoAvailableTextView;
@@ -83,8 +83,9 @@ public class CityWeatherDetailFragment extends Fragment
 		ButterKnife.bind(this, view);
 
 		cityTextView.setText(city);
+		weatherDetailRecycler.setNestedScrollingEnabled(false);
 
-		temperatureTextView.setText(DateFormatter.getDayOfTheYear(dayOfTheYear));
+		dateTextView.setText(DateFormatter.getDayOfTheYear(dayOfTheYear));
 
 		adapter = new CityWeatherDetailAdapter(getContext(), weatherByHours);
 
@@ -125,7 +126,7 @@ public class CityWeatherDetailFragment extends Fragment
 
 			if (data != null && data.moveToFirst()) {
 				weatherDetailRecycler.setVisibility(View.VISIBLE);
-				temperatureTextView.setVisibility(View.VISIBLE);
+				dateTextView.setVisibility(View.VISIBLE);
 				noInfoAvailableTextView.setVisibility(View.GONE);
 
 				if (!data.moveToFirst()) {

@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -27,8 +27,11 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.addOnBackStackChangedListener(this);
 		shouldDisplayHomeUp();
 
@@ -48,15 +51,12 @@ public class MainActivity extends AppCompatActivity
 			initTransaction.commit();
 		}
 
-		if(checkPlayServices()){
+		if (checkPlayServices()) {
 			boolean sentToken = Settings.getServerRegistrationStatus(this);
-			if(!sentToken){
+			if (!sentToken) {
 				Intent intent = new Intent(this, RegistrationIntentService.class);
 				startService(intent);
-
-				Log.d("LISTENER", "Start server");
 			}
-			Log.d("LISTENER", "Status is false");
 		}
 	}
 

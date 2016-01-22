@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                      xmlns:tools="http://schemas.android.com/tools"
+                                      android:layout_width="match_parent"
+                                      android:layout_height="wrap_content"
+                                      xmlns:app="http://schemas.android.com/apk/res-auto"
+                                      app:columnCount="2">
+
+	<android.support.v7.widget.Space
+			app:layout_columnSpan="2"
+			app:layout_columnWeight="1"
+			app:layout_rowWeight="1"/>
+
+	<TextView
+			android:id="@+id/detail_city_text"
+			android:layout_marginBottom="16dp"
+			android:layout_marginTop="16dp"
+			android:gravity="center_horizontal"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"
+			app:layout_columnSpan="2"
+			app:layout_columnWeight="1"
+			app:layout_gravity="fill_horizontal"
+			tools:text="Moscow"/>
+
+	<TextView
+			android:id="@+id/no_detail_info_available"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/no_info_available"
+			android:layout_below="@+id/detail_city_text"
+			android:layout_centerHorizontal="true"
+			android:visibility="gone"/>
+
+	<TextView
+			android:id="@+id/detail_city_date"
+			android:layout_width="0dp"
+			android:gravity="center_horizontal"
+			android:textSize="45sp"
+			app:layout_columnWeight="1"
+			app:layout_gravity="fill_horizontal"
+			tools:text="Sun, 23 Jan"/>
+
+	<android.support.v7.widget.Space
+			app:layout_columnSpan="2"
+			app:layout_columnWeight="1"
+			app:layout_rowWeight="1"/>
+
+	<ProgressBar
+			android:id="@+id/detail_progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_columnSpan="2"
+			app:layout_columnWeight="1"
+			app:layout_rowWeight="1"
+			android:visibility="gone"/>
+
+</android.support.v7.widget.GridLayout>

@@ -202,6 +202,8 @@ public class CityWeatherFragment extends Fragment implements LoaderManager.Loade
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if(!isAdded())
+			return;
 		if (key.equals(getString(R.string.pref_server_status))) {
 			updateEmptyView();
 		} else if (key.equals(getString(R.string.pref_location))) {

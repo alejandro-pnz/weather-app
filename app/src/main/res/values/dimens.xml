@@ -10,4 +10,5 @@
     <!-- https://www.google.com/design/spec/components/lists.html#lists-specs -->
     <dimen name="default_icon_single_line_height">56dp</dimen>
     <dimen name="default_text_single_line_height">48dp</dimen>
+	<dimen name="default_list_item_height">72dp</dimen>
 </resources>
